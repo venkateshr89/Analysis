@@ -1,4 +1,4 @@
-#!/usr/bin/python3.5
+#0;136;0c!/usr/bin/python3.5
 
 #usage
 ### arg1=vcf,
@@ -57,13 +57,13 @@ for line in open(tab_file):
         transcript_id=col[17].split(".")[0]
         abq=col[7]
         iden=str(chrom)+"_"+str(bp)+"_"+str(alt)
-        if(int(total_callers)>=2): #and abq!="undef"):
-            if(snpeff_impact not in exclusions): #int(abq)>=30): #and cosmic!="."): #and str(chrombp) in chrbp_tcga):
+        if(int(total_callers)>=2 and abq!="undef"):
+            if(snpeff_impact not in exclusions and int(abq)>=30): #and cosmic!="."): #and str(chrombp) in chrbp_tcga):
                 if str(transcript_id) in canonical_refseq:
                     out_line=chrom+"\t"+bp+"\t"+str(exac_freq)+"\t"+str(kg_freq)+"\t"+str(total_callers)+"\t"+snpeff_impact+"\t"+transcript_id+"\t"+str(cosmic)+"\t"+str(abq)+"\n"
                     if (exac_freq=="." and kg_freq=="."):
                         id_dict[iden]=str(out_line)
-                        out.write(out_line)
+                        #out.write(out_line)
                     if (exac_freq!="." or kg_freq!="."):
                         if (exac_freq=="." and kg_freq!="."):
                             if (float(kg_freq)<=0.01):
@@ -79,16 +79,16 @@ for line in open(tab_file):
                         if (float(exac_freq)<=0.01 and float(kg_freq)<=0.01):
                             #id_dict[iden]=out_line
                             out.write(out_line)
-# for kav in open(kaviar_file):
-#     if "#" in kav:
-#         continue
-#     else:
-#         col1=kav.strip().split("\t")
-#         chromk=col1[0]
-#         bpk=col1[1]
-#         altk=col1[4]
-#         freqk=col1[7]
-#         idenk=str(chromk)+"_"+str(bpk)+"_"+str(altk)
-#         if(idenk in id_dict):
-#             if (float(freqk)<=0.01):
-#                 out.write(id_dict[idenk])
+for kav in open(kaviar_file):
+    if "#" in kav:
+        continue
+    else:
+        col1=kav.strip().split("\t")
+        chromk=col1[0]
+        bpk=col1[1]
+        altk=col1[4]
+        freqk=col1[7]
+        idenk=str(chromk)+"_"+str(bpk)+"_"+str(altk)
+        if(idenk in id_dict):
+            if (float(freqk)<=0.01):
+                out.write(id_dict[idenk])
