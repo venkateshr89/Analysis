@@ -1,4 +1,4 @@
-#0;136;0c!/usr/bin/python3.5
+!/usr/bin/python3.5
 
 #usage
 ### arg1=vcf,
