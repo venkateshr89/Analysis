@@ -1,0 +1,59 @@
+#!/usr/bin/python3.5
+# This script is used to map 10x vdj AA_sequence and NT_sequence in a json file to corresponding annotations
+# Argument 1 -> Consensus_annotation.json file from 10x vdj output
+# Argument 2 -> Consensus_annovation.csv file from 10x vdj output
+# Argument 3 -> Output file
+
+import sys
+import argparse
+import os
+import re
+import json
+from itertools import chain
+from collections import defaultdict
+
+
+clon_file=sys.argv[1]
+anno_file=sys.argv[2]
+out_file=sys.argv[3]
+
+##Function to flatten dictionary - not used here but could be useful - equivalent to ruby's flatten function
+def flatten(x):
+    if type(x) != list:
+        return x
+    else:
+        bar=[]
+        for i in x:
+            if type(i) == list:
+                bar.extend(flatten(i))
+            else:
+                bar.append(i)
+        return bar
+
+dict_anno={}
+dict_clon={}
+dict_tmp={}
+
+
+anno_f=open(anno_file,'r')
+out_f=open(out_file,'w')
+x=0
+for line_a in anno_f:
+    x=x+1
+    if x==1:
+        out_f.write(line_a.strip()+",aa,cdr_nt,cdr_aa\n")
+    else:
+        col_a=line_a.strip().split(",")
+        anno_id=col_a[1]
+        anno_umis=col_a[-1]
+        cdr3_nt=col_a[-3]
+        cdr3_aa=col_a[-4]
+        annotations=",".join(col_a)
+        dict_anno[anno_id]=annotations
+clon_f=open(clon_file,'r')
+clon_dict = json.load(clon_f)
+for i in range(0,(len(clon_dict))):
+    val=(clon_dict[i]['aa_sequence']+","+clon_dict[i]['cdr3_seq']+","+clon_dict[i]['cdr3'])
+    dict_tmp[clon_dict[i]['contig_name']]=str(val)
+for k,v in dict_tmp.items():
+    out_f.write(dict_anno[k]+","+v+"\n")
