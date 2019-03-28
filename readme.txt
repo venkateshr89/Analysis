@@ -23,4 +23,3 @@ Sciclone needs
 Refer to sci.R and sciclone Docker file in repo "pdx_ppmp/pipeline/docker/sciclone" to setup sciclone docker image and run sciclone R script 
 
 
-ENJOY ANALYSIS !!!!!!
